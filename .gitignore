@@ -131,4 +131,6 @@ dmypy.json
 
 .idea/
 /flaskProject/training.1600000.processed.noemoticon.csv
+/flaskProject/license.txt
+
 
