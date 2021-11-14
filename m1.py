@@ -10,11 +10,9 @@ X_train, X_test, y_train, y_test = train_test_split(digits.data, digits.target, 
 
 clf_KNN = KNeighborsClassifier()
 
-
 def train():
     # Train a kNN model using the training set
     clf_KNN.fit(X_train, y_train)
-
 
 def prediction():
     # Predictions using the kNN model on the test set
