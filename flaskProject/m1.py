@@ -2,6 +2,7 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+import tweepy
 
 digits = load_digits()
 
@@ -23,3 +24,24 @@ def prediction():
 
     accuracy = 0
     return str(accuracy)
+
+def tweetText(url):
+    licenseFile = open('license.txt', 'r')
+
+    consumerKey = licenseFile.readline().rstrip()
+    secretConsumeKey = licenseFile.readline().rstrip()
+    accessToken = licenseFile.readline().rstrip()
+    secretAccessToken = licenseFile.readline().rstrip()
+
+    auth = tweepy.OAuthHandler(consumerKey, secretConsumeKey)
+    auth.set_access_token(accessToken, secretAccessToken)
+
+    api = tweepy.API(auth)
+
+    id = url.split('/')[-1]
+
+    status = api.get_status(id)
+    text = status.text
+
+    return text
+
