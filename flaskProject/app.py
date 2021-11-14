@@ -36,7 +36,9 @@ def inputMessage():
         recieved = request.get_json()
         message = recieved['message']
         print(message)
-        response = m1.tweetText(message)
+        sentiment = "Hello"
+        responseDict = { "tweet" : m1.tweetText(message), "sentiment" : sentiment }
+        response = json.dumps(responseDict)
     return response
 
 if __name__ == '__main__':              # Run the server

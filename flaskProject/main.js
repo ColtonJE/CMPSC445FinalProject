@@ -20,12 +20,11 @@ function getResult() {
 
             // JSON string
             var replyString = http.responseText;
+            var text = JSON.parse(replyString)
 
-            document.getElementById("result").innerHTML = "Heres the Tweets Text: " + replyString;
+            document.getElementById("result").innerHTML = "<h2> Heres the Tweets Text:</h2><br> " + text['tweet'];
             document.getElementById("result").innerHTML += "<br>";
-
-            // convert JSON string into JavaScript object and get the scores
-
+            document.getElementById("result").innerHTML += "<h2>The Text Sentiment is:</h2><br>" + text['sentiment'];
         }
     };
 
