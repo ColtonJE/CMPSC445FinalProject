@@ -50,3 +50,38 @@ def tweetText(url):
 
     return text
 
+def sentAnalysis( text ):
+    import re
+    import nltk
+    nltk.download('stopwords')
+    from nltk.corpus import stopwords
+    from nltk.stem.porter import PorterStemmer
+
+    nltk.download('wordnet')
+
+    review = re.sub('[^a-zA-Z]', ' ', text)
+    review = review.lower()
+    review = review.split()
+    ps = PorterStemmer()
+    all_stopwords = stopwords.words('english')
+    all_stopwords.remove('not')
+    review = [ps.stem(word) for word in review if not word in set(all_stopwords)]
+    lm = nltk.WordNetLemmatizer()
+    review = [lm.lemmatize(word) for word in review]
+    review = ' '.join(review)
+    print(review)
+
+
+    from nltk.sentiment import SentimentIntensityAnalyzer
+    sia = SentimentIntensityAnalyzer()
+    sent = sia.polarity_scores(review)
+    print( sent )
+
+    if( sent["neg"] > sent["pos"] ):
+        return "Negative"
+    elif( sent["pos"] > sent["neg"] ):
+        return "Positive"
+    # elif( sent["neu"] > sent["pos"] and sent["neu"] > sent["neg"] ):
+    #     return "Neutral"
+    else:
+        return "Undeterminable"

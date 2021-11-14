@@ -36,8 +36,9 @@ def inputMessage():
         recieved = request.get_json()
         message = recieved['message']
         print(message)
-        sentiment = "Hello"
-        responseDict = { "tweet" : m1.tweetText(message), "sentiment" : sentiment }
+        tweettext = m1.tweetText(message)
+        sentiment = m1.sentAnalysis(tweettext)
+        responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
         response = json.dumps(responseDict)
     return response
 
