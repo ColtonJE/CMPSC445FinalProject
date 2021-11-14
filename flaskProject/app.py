@@ -1,4 +1,5 @@
 import json
+import m1
 from flask import Flask, send_from_directory, request, json
 from flask_cors import CORS
 app = Flask(__name__)
@@ -35,7 +36,8 @@ def inputMessage():
         recieved = request.get_json()
         message = recieved['message']
         print(message)
-    return "Error"
+        response = m1.tweetText(message)
+    return response
 
 if __name__ == '__main__':              # Run the server
     app.run(port = 8000)                # Start the server
