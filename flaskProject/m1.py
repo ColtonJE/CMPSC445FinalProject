@@ -26,20 +26,25 @@ def prediction():
     return str(accuracy)
 
 def tweetText(url):
+
+    # Opens file that contains Twitter Developer License Keys
     licenseFile = open('license.txt', 'r')
 
+    # Assigns token to its respective key
     consumerKey = licenseFile.readline().rstrip()
     secretConsumeKey = licenseFile.readline().rstrip()
     accessToken = licenseFile.readline().rstrip()
     secretAccessToken = licenseFile.readline().rstrip()
 
+    # Sets up authorization
     auth = tweepy.OAuthHandler(consumerKey, secretConsumeKey)
     auth.set_access_token(accessToken, secretAccessToken)
-
     api = tweepy.API(auth)
 
+    # Gets Tweet status ID from the URL
     id = url.split('/')[-1]
 
+    # Pulls text from the tweet
     status = api.get_status(id)
     text = status.text
 
