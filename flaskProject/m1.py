@@ -47,7 +47,12 @@ def tweetText(url):
     # Pulls text from the tweet
     # Tweepy defaults to 140 characters, but Twitter allows 280 characters. tweet_mode matches Twitter character limit
     status = api.get_status(id, tweet_mode="extended")
-    text = status.full_text
+
+    # Retweets do not have extended attribute status, and will throw an AttributeError when sending as a string
+    try:
+        text = status.full_text
+    except AttributeError:
+        text = status.retweeted_status.full_text
 
     return text
 
