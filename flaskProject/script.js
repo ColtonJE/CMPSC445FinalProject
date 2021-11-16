@@ -17,7 +17,7 @@ function getResult() {
             // JSON string
             var replyString = http.responseText;
 
-            document.getElementById("result").innerHTML = "<h2>Here is the result</h2><br> JSON received: " + replyString;
+            document.getElementById("tweet").innerHTML = "<h2>Here is the result</h2><br> JSON received: " + replyString;
             document.getElementById("result").innerHTML += "<br>";
 
             // convert JSON string into JavaScript object and get the scores

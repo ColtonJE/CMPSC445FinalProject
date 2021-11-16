@@ -64,6 +64,7 @@ def sentAnalysis( text ):
     from nltk.stem.porter import PorterStemmer
 
     nltk.download('wordnet')
+    nltk.download('vader_lexicon')
 
     review = re.sub('[^a-zA-Z]', ' ', text)
     review = review.lower()
@@ -87,7 +88,7 @@ def sentAnalysis( text ):
         return "Negative"
     elif( sent["pos"] > sent["neg"] ):
         return "Positive"
-    # elif( sent["neu"] > sent["pos"] and sent["neu"] > sent["neg"] ):
-    #     return "Neutral"
+    elif( sent["neu"] > sent["pos"] and sent["neu"] > sent["neg"] ):
+        return "Neutral"
     else:
         return "Undeterminable"

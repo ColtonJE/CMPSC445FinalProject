@@ -22,9 +22,9 @@ function getResult() {
             var replyString = http.responseText;
             var text = JSON.parse(replyString)
 
-            document.getElementById("result").innerHTML = "<h2> Heres the Tweets Text:</h2><br> " + text['tweet'];
-            document.getElementById("result").innerHTML += "<br>";
-            document.getElementById("result").innerHTML += "<h2>The Text Sentiment is:</h2><br>" + text['sentiment'];
+            document.getElementById("tweet").innerHTML = "<h2> Heres the Tweets Text:</h2><br> " + text['tweet'];
+            document.getElementById("tweet").innerHTML += "<br>";
+            document.getElementById("result").innerHTML = "<h2>The Text Sentiment is:</h2><br>" + text['sentiment'];
         }
     };
 
