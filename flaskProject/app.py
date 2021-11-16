@@ -37,11 +37,12 @@ def inputMessage():
         message = recieved['message']
         print(message)
         tweettext = m1.tweetText(message)
-        sentiment = m1.sentAnalysis(tweettext)
-        responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
+        #sentiment = m1.sentAnalysis(tweettext)
+        #responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
+        responseDict = {"tweet": tweettext}
         response = json.dumps(responseDict)
     return response
 
 if __name__ == '__main__':              # Run the server
-    app.run(port = 8000)                # Start the server
+    app.run(port = 5000)                # Start the server
 

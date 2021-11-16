@@ -1,6 +1,6 @@
 function getResult() {
 
-    var url = "http://localhost:8000";   // The URL and the port number must match server-side
+    var url = "http://localhost:5000";   // The URL and the port number must match server-side
     var endpoint = "/result";            // Endpoint must match server endpoint
 
     var http = new XMLHttpRequest();
