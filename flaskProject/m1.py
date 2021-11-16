@@ -45,8 +45,9 @@ def tweetText(url):
     id = url.split('/')[-1]
 
     # Pulls text from the tweet
-    status = api.get_status(id)
-    text = status.text
+    # Tweepy defaults to 140 characters, but Twitter allows 280 characters. tweet_mode matches Twitter character limit
+    status = api.get_status(id, tweet_mode="extended")
+    text = status.full_text
 
     return text
 
