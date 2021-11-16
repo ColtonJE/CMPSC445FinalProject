@@ -37,9 +37,9 @@ def inputMessage():
         message = recieved['message']
         print(message)
         tweettext = m1.tweetText(message)
-        #sentiment = m1.sentAnalysis(tweettext)
-        #responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
-        responseDict = {"tweet": tweettext}
+        sentiment = m1.sentAnalysis(tweettext)
+        responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
+        # responseDict = {"tweet": tweettext}
         response = json.dumps(responseDict)
     return response
 
