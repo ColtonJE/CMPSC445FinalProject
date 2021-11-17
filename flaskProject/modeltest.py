@@ -104,32 +104,32 @@ def preprocess(data_text):
 
 t = time.time()
 
-processed_text = preprocess(text)
-
-print(f'Text Preprocessing complete.')
-print(f'Time Taken: {round(time.time() - t)} seconds')
-
-processed_text[0:25]
-
-data_pos = processed_text[800000:]
-# wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
-# collocations=False).generate(" ".join(data_pos))
-# plt.figure(figsize = (40,40))
-# plt.imshow(wc)
-
-data_pos = processed_text[:800000]
-# wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
-# collocations=False).generate(" ".join(data_pos))
-# plt.figure(figsize = (40,40))
-# plt.imshow(wc)
-
-X_train, X_test, y_train, y_test = train_test_split(processed_text, sentiment, test_size=0.05, random_state=0)
-
-vectoriser = TfidfVectorizer(ngram_range=(1, 2), max_features=500000)
-vectoriser.fit(X_train)
-
-X_train = vectoriser.transform(X_train)
-X_test = vectoriser.transform(X_test)
+# processed_text = preprocess(text)
+#
+# print(f'Text Preprocessing complete.')
+# print(f'Time Taken: {round(time.time() - t)} seconds')
+#
+# processed_text[0:25]
+#
+# data_pos = processed_text[800000:]
+# # wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
+# # collocations=False).generate(" ".join(data_pos))
+# # plt.figure(figsize = (40,40))
+# # plt.imshow(wc)
+#
+# data_pos = processed_text[:800000]
+# # wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
+# # collocations=False).generate(" ".join(data_pos))
+# # plt.figure(figsize = (40,40))
+# # plt.imshow(wc)
+#
+# X_train, X_test, y_train, y_test = train_test_split(processed_text, sentiment, test_size=0.05, random_state=0)
+#
+# vectoriser = TfidfVectorizer(ngram_range=(1, 2), max_features=500000)
+# vectoriser.fit(X_train)
+#
+# X_train = vectoriser.transform(X_train)
+# X_test = vectoriser.transform(X_test)
 
 
 def model_evaluate(model):
@@ -151,58 +151,65 @@ def model_evaluate(model):
     plt.title("Confusion Matrix", fontdict={'size': 18}, pad=20)
 
 
-t = time.time()
-model = LogisticRegression()
-model.fit(X_train, y_train)
-model_evaluate(model)
-print(f'Logistic Regression complete.')
-print(f'Time Taken: {round(time.time() - t)} seconds')
+# t = time.time()
+# model = LogisticRegression()
+# model.fit(X_train, y_train)
+# model_evaluate(model)
+# print(f'Logistic Regression complete.')
+# print(f'Time Taken: {round(time.time() - t)} seconds')
+#
+# file = open('vectoriser-ngram-(1,2).pickle', 'wb')
+# pickle.dump(vectoriser, file)
+# file.close()
+#
+# file = open('sentiment_logistic.pickle', 'wb')
+# pickle.dump(model, file)
+# file.close()
 
-file = open('vectoriser-ngram-(1,2).pickle', 'wb')
-pickle.dump(vectoriser, file)
-file.close()
+def load_models():
+    file = open('vectoriser-ngram-(1,2).pickle', 'rb')
+    vectoriser = pickle.load(file)
+    file.close()
 
-file = open('sentiment_logistic.pickle', 'wb')
-pickle.dump(model, file)
-file.close()
+    file = open('sentiment_logistic.pickle', 'rb')
+    log_model = pickle.load(file)
+    file.close()
+
+    return vectoriser, log_model
+
+def predict( text ):
+    vectoriser, model = load_models()
+    textdata = vectoriser.transform(preprocess(text))
+    sentiment = model.predict(textdata)
+
+    data = []
+    for text, pred in zip(text, sentiment):
+        data.append((text, pred))
+
+    df = pd.DataFrame(data, columns=['text', 'sentiment'])
+    df = df.replace([0, 1], ["Negative", "Positive"])
+    print( df )
+    return df.at[ 0, 'sentiment' ]
+
+# vectoriser, log_model = load_models()
+#
+# mystring = input("Enter a string: ")
+# text = [mystring]
+#
+# df = predict(vectoriser, log_model, text)
+# print(df)
+
+# def getSentiment( intex ):
+#     stringArr = input( intex )
+#     intext = [stringArr]
+#     vectoriser, log_model = load_models()
+#     df = predict(vectoriser, log_model, intext)
+#     return df
 
 if __name__ == "__main__":
 
-    def load_models():
+    intext = ["does this work"]
 
-        file = open('vectoriser-ngram-(1,2).pickle', 'rb')
-        vectoriser = pickle.load(file)
-        file.close()
-
-        file = open('sentiment_logistic.pickle', 'rb')
-        log_model = pickle.load(file)
-        file.close()
-
-        return vectoriser, log_model
-
-
-    def predict(vectoriser, model, text):
-
-        textdata = vectoriser.transform(preprocess(text))
-        sentiment = model.predict(textdata)
-
-        data = []
-        for text, pred in zip(text, sentiment):
-            data.append((text, pred))
-
-        df = pd.DataFrame(data, columns=['text', 'sentiment'])
-        df = df.replace([0, 1], ["Negative", "Positive"])
-        return df
-
-
-    vectoriser, log_model = load_models()
-
-    text = ["Data science is a very enjoyable job.",
-            "Twitter is unnecessary.",
-            "I dont feel good."]
-
-    df = predict(vectoriser, log_model, text)
-    print(df.head())
-
+    print( predict( intext ).at[ 0, 'sentiment'] )
 
 

@@ -1,5 +1,6 @@
 import json
 import m1
+import modeltest
 from flask import Flask, send_from_directory, request, json
 from flask_cors import CORS
 app = Flask(__name__)
@@ -37,7 +38,9 @@ def inputMessage():
         message = recieved['message']
         print(message)
         tweettext = m1.tweetText(message)
-        sentiment = m1.sentAnalysis(tweettext)
+        # sentiment = m1.sentAnalysis(tweettext)
+        sentiment = modeltest.predict( [tweettext] )
+        print ( sentiment )
         responseDict = { "tweet" : tweettext, "sentiment" : sentiment }
         # responseDict = {"tweet": tweettext}
         response = json.dumps(responseDict)
