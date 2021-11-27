@@ -14,7 +14,6 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-# from wordcloud import WordCloud
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
