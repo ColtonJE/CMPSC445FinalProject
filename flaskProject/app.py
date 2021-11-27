@@ -26,11 +26,6 @@ def get_main():
     # Return contents of main.js
     return send_from_directory('', 'main.js', mimetype='text/javascript')
 
-@app.route('/script.js', methods=["GET"]) # Send script.js
-def get_script():
-    # Return contents of script.js
-    return send_from_directory('', 'script.js', mimetype='text/javascript')
-
 @app.route('/inputMessage',methods=['GET','POST'])
 def inputMessage():
     if request.method == 'POST':

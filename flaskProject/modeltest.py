@@ -206,10 +206,10 @@ def predict( text ):
 #     df = predict(vectoriser, log_model, intext)
 #     return df
 
-if __name__ == "__main__":
-
-    intext = ["does this work"]
-
-    print( predict( intext ).at[ 0, 'sentiment'] )
+# if __name__ == "__main__":
+#
+#     intext = ["does this work"]
+#
+#     print( predict( intext ).at[ 0, 'sentiment'] )
 
 
