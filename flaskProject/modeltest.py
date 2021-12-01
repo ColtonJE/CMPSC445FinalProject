@@ -141,11 +141,11 @@ t = time.time()
 # print(f'Logistic Regression complete.')
 # print(f'Time Taken: {round(time.time() - t)} seconds')
 #
-# file = open('vectoriser-ngram-(1,2).pickle', 'wb')
+# file = open('vectoriser.pickle', 'wb')
 # pickle.dump(tfid, file)
 # file.close()
 #
-# file = open('sentiment_logistic.pickle', 'wb')
+# file = open('logistic_regression.pickle', 'wb')
 # pickle.dump(model, file)
 # file.close()
 
@@ -154,12 +154,12 @@ t = time.time()
 # pickle complete
 
 
-def load_models():
-    file = open('vectoriser-ngram-(1,2).pickle', 'rb')
+def load_pickled_model():
+    file = open('vectoriser.pickle', 'rb')
     vectoriser = pickle.load(file)
     file.close()
 
-    file = open('sentiment_logistic.pickle', 'rb')
+    file = open('logistic_regression.pickle', 'rb')
     log_model = pickle.load(file)
     file.close()
 
@@ -167,7 +167,7 @@ def load_models():
 
 
 def predict(text):
-    vectoriser, model = load_models()
+    vectoriser, model = load_pickled_model()
     textdata = vectoriser.transform(preprocess(text))
     sentiment = model.predict(textdata)
 
@@ -179,24 +179,3 @@ def predict(text):
     df = df.replace([0, 1], ["Negative", "Positive"])
     print(df)
     return df.at[0, 'sentiment']
-
-# tfid, log_model = load_models()
-#
-# mystring = input("Enter a string: ")
-# text = [mystring]
-#
-# df = predict(tfid, log_model, text)
-# print(df)
-
-# def getSentiment( intex ):
-#     stringArr = input( intex )
-#     intext = [stringArr]
-#     tfid, log_model = load_models()
-#     df = predict(tfid, log_model, intext)
-#     return df
-
-# if __name__ == "__main__":
-#
-#     intext = ["does this work"]
-#
-#     print( predict( intext ).at[ 0, 'sentiment'] )
