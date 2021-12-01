@@ -1,9 +1,4 @@
 import os
-
-for dirname, _, filenames in os.walk('/kaggle/input'):
-    for filename in filenames:
-        print(os.path.join(dirname, filename))
-
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -27,47 +22,44 @@ if not sys.warnoptions:
     import warnings
 
     warnings.simplefilter("ignore")
-# %matplotlib inline
 
-DATASET_COLUMNS = ["sentiment", "ids", "date", "flag", "user", "text"]
+# set the labels for the dataset
+Label_Columns = ["sentiment", "ids", "date", "flag", "user", "text"]
 
-dataset = pd.read_csv('training.1600000.processed.noemoticon.csv', encoding="ISO-8859-1", names=DATASET_COLUMNS)
+# read the csv file
+dataset = pd.read_csv('training.1600000.processed.noemoticon.csv', encoding="ISO-8859-1", names=Label_Columns)
 
 dataset.head()
-
 dataset.info()
-
 dataset['sentiment'].unique()
-
 dataset = dataset[['sentiment', 'text']]
 dataset['sentiment'] = dataset['sentiment'].replace(4, 1)
-
 dataset['sentiment'].unique()
 
 """
-If stop words and word are not installed, comment lines can be downloaded by running.
+Install stop words and word net
 """
 # stop_words = nltk.download('stopwords')
 # word_net = nltk.download('wordnet')
 
 
-emojis = {':)': 'smile', ':-)': 'smile', ';d': 'wink', ':-E': 'vampire', ':(': 'sad',
-          ':-(': 'sad', ':-<': 'sad', ':P': 'raspberry', ':O': 'surprised',
-          ':-@': 'shocked', ':@': 'shocked', ':-$': 'confused', ':\\': 'annoyed',
-          ':#': 'mute', ':X': 'mute', ':^)': 'smile', ':-&': 'confused', '$_$': 'greedy',
-          '@@': 'eyeroll', ':-!': 'confused', ':-D': 'smile', ':-0': 'yell', 'O.o': 'confused',
-          '<(-_-)>': 'robot', 'd[-_-]b': 'dj', ":'-)": 'sadsmile', ';)': 'wink',
-          ';-)': 'wink', 'O:-)': 'angel', 'O*-)': 'angel', '(:-D': 'gossip', '=^.^=': 'cat'}
+common_emoji = {':)': 'smile', ':-)': 'smile', ';d': 'wink', ':-E': 'vampire', ':(': 'sad',
+                ':-(': 'sad', ':-<': 'sad', ':P': 'raspberry', ':O': 'surprised',
+                ':-@': 'shocked', ':@': 'shocked', ':-$': 'confused', ':\\': 'annoyed',
+                ':#': 'mute', ':X': 'mute', ':^)': 'smile', ':-&': 'confused', '$_$': 'greedy',
+                '@@': 'eyeroll', ':-!': 'confused', ':-D': 'smile', ':-0': 'yell', 'O.o': 'confused',
+                '<(-_-)>': 'robot', 'd[-_-]b': 'dj', ":'-)": 'sadsmile', ';)': 'wink',
+                ';-)': 'wink', 'O:-)': 'angel', 'O*-)': 'angel', '(:-D': 'gossip', '=^.^=': 'cat'}
 
-ps = PorterStemmer()
+porter_stem = PorterStemmer()
 
-text, sentiment = list(dataset['text']), list(dataset['sentiment'])
+sentiment, text = list(dataset['sentiment']), list(dataset['text'])
 
 
 def preprocess(data_text):
-    processed_text = []
+    preprocessedd_text = []
 
-    word_lem = nltk.WordNetLemmatizer()
+    word_lemmatizer = nltk.WordNetLemmatizer()
 
     url_pattern = r"((http://)[^ ]*|(https://)[^ ]*|( www\.)[^ ]*)"
     user_pattern = '@[^\s]+'
@@ -80,8 +72,8 @@ def preprocess(data_text):
 
         tweet = re.sub(url_pattern, ' ', tweet)
 
-        for emoji in emojis.keys():
-            tweet = tweet.replace(emoji, "EMOJI" + emojis[emoji])
+        for emoji in common_emoji.keys():
+            tweet = tweet.replace(emoji, "EMOJI" + common_emoji[emoji])
 
         tweet = re.sub(user_pattern, " ", tweet)
 
@@ -94,62 +86,54 @@ def preprocess(data_text):
         for word in tweet.split():
             if word not in nltk.corpus.stopwords.words('english'):
                 if len(word) > 1:
-                    word = word_lem.lemmatize(word)
+                    word = word_lemmatizer.lemmatize(word)
                     tweet_words += (word + ' ')
-        processed_text.append(tweet_words)
+        preprocessedd_text.append(tweet_words)
 
-    return processed_text
+    return preprocessedd_text
 
 
 t = time.time()
 
-# processed_text = preprocess(text)
+# comment this section until the comment with "pickle complete"
+# when model has been already trained and saved as a pickle file
+#######################################################################################################################
+# print(f'Starting Kaggle dataset text preprocessing.')
 #
-# print(f'Text Preprocessing complete.')
-# print(f'Time Taken: {round(time.time() - t)} seconds')
+# preprocessed_text = preprocess(text)
 #
-# processed_text[0:25]
+# print(f'Kaggle dataset text preprocessing complete.')
+# print(f'Completion time: {round(time.time() - t)} seconds')
 #
-# data_pos = processed_text[800000:]
-# # wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
-# # collocations=False).generate(" ".join(data_pos))
-# # plt.figure(figsize = (40,40))
-# # plt.imshow(wc)
+# preprocessed_text[0:25]
 #
-# data_pos = processed_text[:800000]
-# # wc = WordCloud(max_words = 300000,background_color ='white', width = 1920 , height = 1080,
-# # collocations=False).generate(" ".join(data_pos))
-# # plt.figure(figsize = (40,40))
-# # plt.imshow(wc)
+# X_train, X_test, y_train, y_test = train_test_split(preprocessed_text, sentiment, test_size=0.05, random_state=0)
 #
-# X_train, X_test, y_train, y_test = train_test_split(processed_text, sentiment, test_size=0.05, random_state=0)
+# tfid = TfidfVectorizer(ngram_range=(1, 2), max_features=500000)
+# tfid.fit(X_train)
 #
-# vectoriser = TfidfVectorizer(ngram_range=(1, 2), max_features=500000)
-# vectoriser.fit(X_train)
+# X_train = tfid.transform(X_train)
+# X_test = tfid.transform(X_test)
 #
-# X_train = vectoriser.transform(X_train)
-# X_test = vectoriser.transform(X_test)
-
-
+#
 # def model_evaluate(model):
 #     y_pred = model.predict(X_test)
 #     print(classification_report(y_test, y_pred))
-#     cm = confusion_matrix(y_test, y_pred)
+#     confusion_mtrx = confusion_matrix(y_test, y_pred)
 #
 #     categories = ['Negative', 'Positive']
 #     group_names = ['True Negative', 'False Positive', 'False Negative', 'True Positive']
-#     group_percentages = ['{0:.2%}'.format(value) for value in cm.flatten() / np.sum(cm)]
+#     group_percentages = ['{0:.2%}'.format(value) for value in confusion_mtrx.flatten() / np.sum(confusion_mtrx)]
 #     labels = [f'{v1}\n{v2}' for v1, v2 in zip(group_names, group_percentages)]
 #     labels = np.asarray(labels).reshape(2, 2)
 #
-#     sns.heatmap(cm, annot=labels, cmap='Blues', fmt='',
-#                 xticklabels=categories, yticklabels=categories)
+#     sns.heatmap(confusion_mtrx, annot=labels, cmap='Blues', fmt='', xticklabels=categories, yticklabels=categories)
 #
 #     plt.xlabel("Predicted values", fontdict={'size': 14}, labelpad=10)
 #     plt.ylabel("Actual values", fontdict={'size': 14}, labelpad=10)
 #     plt.title("Confusion Matrix", fontdict={'size': 18}, pad=20)
-
-
+#
+#
 # t = time.time()
 # model = LogisticRegression()
 # model.fit(X_train, y_train)
@@ -158,12 +142,17 @@ t = time.time()
 # print(f'Time Taken: {round(time.time() - t)} seconds')
 #
 # file = open('vectoriser-ngram-(1,2).pickle', 'wb')
-# pickle.dump(vectoriser, file)
+# pickle.dump(tfid, file)
 # file.close()
 #
 # file = open('sentiment_logistic.pickle', 'wb')
 # pickle.dump(model, file)
 # file.close()
+
+
+#######################################################################################################################
+# pickle complete
+
 
 def load_models():
     file = open('vectoriser-ngram-(1,2).pickle', 'rb')
@@ -176,7 +165,8 @@ def load_models():
 
     return vectoriser, log_model
 
-def predict( text ):
+
+def predict(text):
     vectoriser, model = load_models()
     textdata = vectoriser.transform(preprocess(text))
     sentiment = model.predict(textdata)
@@ -187,22 +177,22 @@ def predict( text ):
 
     df = pd.DataFrame(data, columns=['text', 'sentiment'])
     df = df.replace([0, 1], ["Negative", "Positive"])
-    print( df )
-    return df.at[ 0, 'sentiment' ]
+    print(df)
+    return df.at[0, 'sentiment']
 
-# vectoriser, log_model = load_models()
+# tfid, log_model = load_models()
 #
 # mystring = input("Enter a string: ")
 # text = [mystring]
 #
-# df = predict(vectoriser, log_model, text)
+# df = predict(tfid, log_model, text)
 # print(df)
 
 # def getSentiment( intex ):
 #     stringArr = input( intex )
 #     intext = [stringArr]
-#     vectoriser, log_model = load_models()
-#     df = predict(vectoriser, log_model, intext)
+#     tfid, log_model = load_models()
+#     df = predict(tfid, log_model, intext)
 #     return df
 
 # if __name__ == "__main__":
@@ -210,5 +200,3 @@ def predict( text ):
 #     intext = ["does this work"]
 #
 #     print( predict( intext ).at[ 0, 'sentiment'] )
-
-
