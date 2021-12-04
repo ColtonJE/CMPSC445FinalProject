@@ -15,6 +15,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.linear_model import LogisticRegression
+from time import sleep
+from tqdm import tqdm
 
 import sys
 
@@ -59,6 +61,7 @@ sentiment, text = list(dataset['sentiment']), list(dataset['text'])
 def preprocess(data_text):
     preprocessedd_text = []
 
+
     word_lemmatizer = nltk.WordNetLemmatizer()
 
     url_pattern = r"((http://)[^ ]*|(https://)[^ ]*|( www\.)[^ ]*)"
@@ -90,6 +93,10 @@ def preprocess(data_text):
                     tweet_words += (word + ' ')
         preprocessedd_text.append(tweet_words)
 
+        #show progress of preprocessing
+        for i in tqdm(data_text):
+            sleep(0.1)
+
     return preprocessedd_text
 
 
@@ -98,6 +105,8 @@ t = time.time()
 # comment this section until the comment with "pickle complete"
 # when model has been already trained and saved as a pickle file
 #######################################################################################################################
+
+
 # print(f'Starting Kaggle dataset text preprocessing.')
 #
 # preprocessed_text = preprocess(text)
@@ -152,6 +161,7 @@ t = time.time()
 
 #######################################################################################################################
 # pickle complete
+# comment until the line of #'s
 
 
 def load_pickled_model():
